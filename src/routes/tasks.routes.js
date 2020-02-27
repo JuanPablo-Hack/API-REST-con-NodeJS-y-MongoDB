@@ -40,18 +40,37 @@ router.get('/:id',async (req,res)=>{
     res.json(resultado);
 });
 //Creamos la funcion de eliminar
+
 router.delete('/:id',async (req,res)=>{
-     //Mandamos llamar al id dentro de los parametros del request
-     const {id} = req.params;
-     //Mandaremos llamar los datos del id
-     const db = await connect();
-     //Eliminamos los valores de ese id
-     const resultado = await db.collection('tasks').remove({_id:ObjectID(id)});
-    //Mandamos una respuesta en JSON
+    //Declaramos el id
+    const {id} = req.params;
+    //Nos conectamos con la base de datos
+    const db = await connect();
+    //Creamos la peticion
+    const resultado = await db.collection('tasks').deleteOne({_id: ObjectID(id)});
+    //Mandamos el resultado
     res.json({
-        mensaje: `Tarea ${id} eliminada`,
+        mensaje: `Tarea ${id} elminada`,
         resultado
-    });
+    })
+});
+//Creamos las funcion de PUT
+router.put('/:id',async (req,res)=>{
+    //Mandamos llamar el id
+    const {id} = req.params;
+    //Datos a actualizar
+    const actualizarTarea = {
+        title: req.body.title,
+        description: req.body.description
+    };
+    //Nos conectamos con la base de datos
+    const db = await connect();
+    //Creamos la peticion
+    const resultado = await db.collection('tasks').updateOne({_id: ObjectID(id)},{$set:actualizarTarea});
+    //Generamos una respuesta
+    res.json({
+        mensaje: `Tarea ${id} elminada`
+    })
 });
 
 
